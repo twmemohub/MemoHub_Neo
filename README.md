@@ -1,4 +1,3 @@
-# group3
-code your stage project
-大家加油 <3
-<3<3<3<3
+# MemoHub Neo
+code your stage project後日談
+A longer journey of MemoHub, buddies！
