@@ -1,0 +1,24 @@
+{
+  "name": "code-your-stage-assignment",
+  "version": "1.0.0",
+  "description": "## Personal Assignment First, navigate to the `/personal-assignment/part0` directory in this repo. You will find an assignment guiding you through the process of submitting a **Pull Request (PR)**, which is the method for turning in your personal assignment.   After submitting the part0 assignment, you will receive the tutorial and instructions for part1 in the comments section of the Pull Request. Once you submit part1, you will then receive the codebase for part2.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "start:dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.5.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "nodemon": "^3.0.1",
+    "openai": "^4.11.0"
+  }
+}
