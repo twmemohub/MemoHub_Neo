@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const NoteSchema = require('./models/note');
 const ArticleSchema = require('./models/article');
 const openAIChat = require('./utils/openai');
+const getMessageUntilSuccess = require('./utils/retry')
 // Test Routing
 router.get("/test", (req, res) => {
     res.send({ msg: "Fight TO THE END!" })
@@ -624,43 +625,11 @@ router.post('/user/article/label', async (req, res) => {
             res.send("Please add your notes first")
             return
         }
-        else { // 沒有label 只有note
-            prompt = "You are an experienced life mentor to help people figure out themselves or achieve some goal.\
-            I have a few thoughts as follow:" + note.join(', ') + " . " +
-            "Please guide me to come up an main idea and make myself create some plans\
-            Do Not reply other sentences such as “Yes, I can help you…” \
-            Provide the pratical guiding and more detail for each question.\
-            Generate 5 questions based on the format below, donot contain \n and please reply in zh-tw:\
-            {\"question1\": \" 1. question1 sentence\",\"question2\": \" 2. question2 sentence\",\"question3\": \" 3. question3 sentence\",\"question4\": \" 4. question4 sentence\",\"question5\": \" 5. question5 sentence\"}"
+        const jsonObject = await getMessageUntilSuccess(note)
+        if(!jsonObject){
+            console.error("Unable to fetch from OpenAI server")
         }
-        console.log(prompt)
-        const openAIResponse = await openAIChat([prompt])
-        console.log(openAIResponse.message.content)
-        // Use regular expression to extract JSON
-        longString = openAIResponse.message.content;
-        const jsonRegex = /{.*?}/s;
-        const match = longString.match(jsonRegex);
-        // console.log(match)
-        if (match) {
-        // 2. Extract the JSON substring
-            const jsonSubstring = match[0];
-            try {
-                // 3. Parse the JSON
-                const jsonObject = JSON.parse(jsonSubstring);
-                console.log(jsonObject);
-                res.send({ 'ans': jsonObject})
-                // const questions = Object.values(jsonObject).join('\n');
-                // console.log(questions)
-                // res.send({ 'ans': questions})
-            } 
-            catch (error) {
-                console.error("Error parsing JSON:", error);
-            }
-        } 
-        else {
-            console.error("JSON not found in the string.");
-        }
-        
+        res.send({ 'ans': jsonObject})
         // res.send({ 'ans': openAIResponse.message.content })
     }
     catch (error) {
