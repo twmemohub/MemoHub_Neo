@@ -11,7 +11,7 @@ MemoHub is a web application designed to enhance the note-taking experience by f
 ## User Impact
 
 - **Boosts Self-Awareness:** By prompting users to revisit and reflect on their own notes, MemoHub helps them uncover new insights and personal growth opportunities.  
-- **Enhances Learning Retention:** Active reflection transforms passive note-taking into a powerful study habit, improving long-term memory and comprehension by up to 20%.  
+- **Enhances Learning Retention:** Active reflection transforms passive note-taking into a powerful study habit, improving long-term memory and comprehension.  
 - **Fosters Creativity:** Linking disparate notes into articles sparks new connections and creative thinking, enabling users to generate richer, more meaningful content.
 
 ## Tech Stack

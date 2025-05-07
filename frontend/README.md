@@ -1,5 +1,30 @@
-# README
-  
-(Please merge this code with your original assignment first, so that the Chart and Chat pages can display correctly!)  
-  
-In your team project, it's recommended to make modifications directly from this code to avoid going through too complicated an environment setup. You can replace the homepage, add the pages you want in `App.js`, and in `/zoo`, you can see that this codebase has added many usable components. You can refer to the usage of these components and copy them to your own project. If you have any questions, please ask ChatGPT and make sure you understand the usage of the Component correctly!
+# MemoHub Frontend
+
+This is the front-end application for MemoHub, built with React and Tailwind CSS.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS)
+- [npm](https://www.npmjs.com/) package manager  
+
+## Project Structure
+```
+frontend/
+├── src/
+│ ├── charts/ # Data visualizations and chart components
+│ ├── components/ # Reusable React components
+│ ├── css/ # Custom CSS and Tailwind styles
+│ ├── data/ # Static or mock data files
+│ ├── hooks/ # Custom React hooks
+│ ├── images/ # Image assets
+│ ├── pages/ # Page-level components (routes)
+│ ├── partials/ # Layout pieces (e.g., headers, footers, nav)
+│ ├── utils/ # Utility functions and helpers
+│ └── App.jsx # Main app component
+└── postcss.config.js # PostCSS configuration for Tailwind CSS
+```
+## Usage
+
+Navigate between pages to create notes, view AI-generated reflective prompts, link notes, and build articles.
+
+Ensure the backend server is running and reachable at the API base URL.

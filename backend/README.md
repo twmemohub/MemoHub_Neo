@@ -1,80 +1,125 @@
-# Setup
+# MemoHub Backend
 
-npm install express mongoose body-parser dotenv axios nodemon cors
+This README describes how to set up and use the MemoHub backend API, which provides endpoints for creating, reading, updating, and deleting notes and articles, as well as generating AI-driven reflection prompts.
 
+---
+
+## Prerequisites
+
+- **Node.js** (LTS) 
+- **npm** package manager  
+- A running **MongoDB** instance (local or cloud)  
+- A valid `.env` file with:
+  ```
+  MONGO_URI=<your-mongodb-connection-string>
+  PORT=3000
+  OPENAI_API_KEY=<your-openai-api-key>
+  ```
+
+# Setup (Detailed)
+  ```
+  npm install express mongoose body-parser dotenv axios nodemon cors
+  ```
 # Run
-`cd .../backend`  
+`cd backend`  
 `npm run start:dev`
 or
 `npm run start`
 
-# Data Structure
+## Data Models
 
-**Note：**
+**Note**
 
-- **SpecialString** noteId (From MongoDB)
-- **String** userId, title, content
-- **Boolean** isLinked
-- **Date** createdAt  
+- **noteId** (ObjectId): Auto-generated MongoDB `_id`.
+- **userId** (String): ID of the user owning this note.
+- **title** (String): Note title.
+- **content** (String): Note content.
+- **isLinked** (Boolean): Whether this note is linked to an article.
+- **createdAt** (Date): Timestamp when the note was created.
 
-**Article：**
+**Article**
 
-- **SpecialString** articleId (From MongoDB)
-- **String** userId, title, content, category
-- **Date** createdAt
-- **String[]** linkedNotes
+- **articleId** (ObjectId): Auto-generated MongoDB `_id`.
+- **userId** (String): ID of the user owning this article.
+- **title** (String): Article title.
+- **content** (String): Article content.
+- **category** (String): Article category for classification.
+- **linkedNotes** (String[]): Array of linked `noteId`s.
+- **createdAt** (Date): Timestamp when the article was created.
 
-# API Format
+## API Endpoints
 
-`$` = "http://localhost:3000", or other URL backend code runs on
+_Base URL: `http://localhost:3000`_ for local testing
 
-## Note Related：
+### Notes
 
-- POST Note   
-{noteId, userId, title, createdAt} = ([$/user/:userId/note](url), body = {title,  content})
-- GET Note  
-{note} = ([$/note/:noteId](url))
-- GET Notes  
-{note1, note2...} = ([$/user/:userId/notes](url))
-- GET Notes by isLinked (overload)
-{note1, note2...} = ([$/user/:userId/notes/?isLinked = true/false](url))
-- DELETE Note  
-{msg} = ([$/note/:noteId](url))
-  > add 403 protection if note is Linked
-- PUT Note Title  
-{userId, title} = ([$/note/:noteId/?title= new title](url))
-- PUT Note isLinked  
-{userId, isLinked} = ([$/note/:noteId/?category = new category](url))
-  > This is modified from PUT Note category,
-  > however, POST Article is also modified, so this method is not needed to be called for now
-- PUT Note Content  
-{userId, content} = ([$/note/:noteId/content](url), body = {new content})
+- **POST** `/user/:userId/note`  
+  Create a new note.  
+  **Body:** `{ title, content }`
 
-## Article Related：
+- **GET** `/note/:noteId`  
+  Retrieve a single note by ID.
 
-- POST Article  
-{articleId, userId, title, createdAt} = ([$/user/:userId/article](url), body = {category, content, linkedNotes})
-- GET Article  
-{article} = ([$/article/:articleId](url))
-- GET Article's linkedNotes
-{note1, note2...} = ([$/article/:articleId/linkedNotes](url))
-- GET Articles  
-{article1, article2...} = ([$/user/:userId/articles](url))
-- DELETE Article  
-{msg} = ([$/article/:articleId](url))
-- PUT Article Title  
-{userId, title} = ([$/article/:title/?title= new title](url))
-- PUT Article Category  
-{userId, category} = ([$/article/:articleId/?category = new category](url))
-- PUT Article Content  
-{userId, content} = ([$/article/:articleId/content](url), body = {new content})
-- PUT Article LinkedNotes  
-{userId, linkedNotes} = ([$/article/:articleId/linkedNotes](url), body = {linkedNotes})
+- **GET** `/user/:userId/notes`  
+  List all notes for a user.
 
-## Danger Zone：
-- DELETE All Notes and Articles
-{msg} = ([$/user/:userId/danger/clear-all](url))
+- **GET** `/user/:userId/notes?isLinked=true|false`  
+  List notes filtered by `isLinked` status.
 
-## AI Related：
-- POST Questions when Creating Article  
-{questions} = ([$/questions/](url), body = {[note1, note2...]})
+- **PUT** `/note/:noteId/title?title=newTitle`  
+  Update note title.
+
+- **PUT** `/note/:noteId/content`  
+  Update note content.  
+  **Body:** `{ content: newContent }`
+
+- **PUT** `/note/:noteId/link?isLinked=true|false`  
+  Toggle note’s linked status.
+
+- **DELETE** `/note/:noteId`  
+  Delete a note.  
+  **Response:** `{ msg: "Deleted" }`
+
+### Articles
+
+- **POST** `/user/:userId/article`  
+  Create an article.  
+  **Body:** `{ title, content, category, linkedNotes }`
+
+- **GET** `/article/:articleId`  
+  Retrieve an article by ID.
+
+- **GET** `/article/:articleId/linkedNotes`  
+  Get notes linked to an article.
+
+- **GET** `/user/:userId/articles`  
+  List all articles for a user.
+
+- **PUT** `/article/:articleId/title?title=newTitle`  
+  Update article title.
+
+- **PUT** `/article/:articleId/content`  
+  Update article content.  
+  **Body:** `{ content: newContent }`
+
+- **PUT** `/article/:articleId/category?category=newCategory`  
+  Update article category.
+
+- **PUT** `/article/:articleId/linkedNotes`  
+  Update linked notes.  
+  **Body:** `{ linkedNotes: [noteId1, noteId2] }`
+
+- **DELETE** `/article/:articleId`  
+  Delete an article.  
+  **Response:** `{ msg: "Deleted" }`
+
+### AI Prompt
+
+- **POST** `/questions`  
+  Generate reflective questions for an article.  
+  **Body:** `{ linkedNotes: [noteId1, noteId2] }`
+
+### Danger Operation
+
+- **DELETE** `/user/:userId/danger/clear-all`  
+  Delete all notes and articles owned by the user.  
